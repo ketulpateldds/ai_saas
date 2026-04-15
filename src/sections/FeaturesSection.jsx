@@ -10,21 +10,25 @@ const featureCards = [
     title: 'Main Intelligence Dashboard',
     description:
       'See your call performance clearly, with a complete view across your agency.',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80',
   },
   {
     title: 'AI Analytics Dashboard',
     description:
       'Turn conversations into trends, opportunities and decisions in real time.',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80',
   },
   {
     title: 'Leaderboards',
     description:
       'Compare teams, branches and individuals to identify what drives wins.',
+    image: 'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=600&q=80',
   },
   {
     title: 'Coaching Dashboard',
     description:
       'Understand what good looks like and improve every call with AI coaching.',
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=600&q=80',
   },
 ]
 
@@ -74,8 +78,14 @@ function FeaturesSection() {
             key={card.title}
             className="feature-card interactive-card group rounded-2xl border border-white/10 bg-card/70 p-6 backdrop-blur transition-all duration-300 hover:border-accent/30 hover:shadow-glow"
           >
-            <div className="feature-card-image mb-5 h-36 rounded-xl border border-white/10 bg-gradient-to-br from-[#0d1117] to-[#0a0d0f] transition-transform duration-500 group-hover:scale-[1.04]" />
-            <h3 className="text-2xl font-semibold text-white group-hover:text-accent transition-colors">
+            <div className="feature-card-image relative mb-5 h-36 overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-[#0d1117] to-[#0a0d0f]">
+              <img 
+                src={card.image} 
+                alt={card.title} 
+                className="h-full w-full object-cover opacity-60 mix-blend-luminosity transition-all duration-500 group-hover:scale-110 group-hover:opacity-100 group-hover:mix-blend-normal" 
+              />
+            </div>
+            <h3 className="text-2xl font-semibold text-white transition-colors group-hover:text-accent">
               {card.title}
             </h3>
             <p className="mt-3 text-soft">{card.description}</p>

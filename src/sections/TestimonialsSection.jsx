@@ -36,19 +36,18 @@ function TestimonialsSection() {
     if (!sectionRef.current) return
 
     const ctx = gsap.context(() => {
-      const cards = sectionRef.current.querySelectorAll('.testimonial-card')
+      const carousel = sectionRef.current.querySelector('.carousel-container')
       
-      gsap.fromTo(cards,
-        { y: 50, opacity: 0 },
+      gsap.fromTo(carousel,
+        { y: 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.7,
+          duration: 0.8,
           ease: 'power3.out',
-          stagger: 0.12,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 78%',
+            start: 'top 80%',
             toggleActions: 'play none none reverse'
           }
         }
@@ -77,26 +76,42 @@ function TestimonialsSection() {
         description="A confidence layer built from day-to-day call operations, not generic promises."
         centered
       />
-      <div className="mt-14 flex justify-center gap-4">
+      <div className="carousel-container relative mx-auto mt-14 h-[240px] w-full max-w-5xl overflow-hidden py-4 md:overflow-visible">
         {testimonials.map((item, idx) => {
-          const offset = Math.abs(active - idx)
-          const isActive = idx === active
+          const diff = (idx - active + testimonials.length) % testimonials.length;
+          let state = 'hidden';
           
+          if (diff === 0) state = 'center';
+          else if (diff === 1) state = 'right';
+          else if (diff === testimonials.length - 1) state = 'left';
+
+          let styles = "";
+          let bgStyles = "";
+          
+          if (state === 'center') {
+            styles = "left-[50%] -translate-x-1/2 z-20 scale-100 opacity-100 shadow-glow blur-0 pointer-events-auto";
+            bgStyles = "bg-white/10 border-accent/50";
+          } else if (state === 'left') {
+            styles = "left-[0%] md:left-[22%] -translate-x-1/2 z-10 scale-[0.80] opacity-40 hover:opacity-75 blur-[1px] cursor-pointer pointer-events-auto";
+            bgStyles = "bg-white/5 border-white/10";
+          } else if (state === 'right') {
+            styles = "left-[100%] md:left-[78%] -translate-x-1/2 z-10 scale-[0.80] opacity-40 hover:opacity-75 blur-[1px] cursor-pointer pointer-events-auto";
+            bgStyles = "bg-white/5 border-white/10";
+          } else {
+            styles = "left-[50%] -translate-x-1/2 z-0 scale-[0.6] opacity-0 blur-sm pointer-events-none";
+            bgStyles = "bg-white/5 border-white/10";
+          }
+
           return (
             <article
               key={item.company}
-              className={`testimonial-card rounded-2xl border border-white/15 bg-white/5 p-5 transition-all duration-700 ${
-                isActive
-                  ? 'scale-105 bg-white/10 opacity-100 shadow-glow translate-y-0'
-                  : offset === 1
-                    ? 'scale-95 opacity-70 -translate-y-1'
-                    : 'scale-90 opacity-45 -translate-y-2'
-              }`}
+              onClick={() => setActive(idx)}
+              className={`testimonial-card absolute top-4 w-[280px] md:w-[340px] rounded-2xl border p-6 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${bgStyles} ${styles}`}
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
                 {item.company}
               </p>
-              <p className="mt-4 text-sm text-white/90">{item.quote}</p>
+              <p className="text-sm leading-relaxed text-white/90">{item.quote}</p>
             </article>
           )
         })}
