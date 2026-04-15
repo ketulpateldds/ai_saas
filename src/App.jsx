@@ -31,7 +31,7 @@ function App() {
           <AdvancedBackground />
           <main
             ref={pageRef}
-            className="relative overflow-hidden bg-base text-white"
+            className="relative overflow-hidden bg-transparent text-white"
           >
             <Navbar />
             <HeroSection />

@@ -86,32 +86,32 @@ function TestimonialsSection() {
           else if (diff === testimonials.length - 1) state = 'left';
 
           let styles = "";
-          let bgStyles = "";
+          let bgStyles = "backdrop-blur-xl bg-gradient-to-br from-white/[0.08] to-transparent shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]";
           
           if (state === 'center') {
             styles = "left-[50%] -translate-x-1/2 z-20 scale-100 opacity-100 shadow-glow blur-0 pointer-events-auto";
-            bgStyles = "bg-white/10 border-accent/50";
+            bgStyles += " border border-accent/50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]";
           } else if (state === 'left') {
             styles = "left-[0%] md:left-[22%] -translate-x-1/2 z-10 scale-[0.80] opacity-40 hover:opacity-75 blur-[1px] cursor-pointer pointer-events-auto";
-            bgStyles = "bg-white/5 border-white/10";
+            bgStyles += " border border-white/10";
           } else if (state === 'right') {
             styles = "left-[100%] md:left-[78%] -translate-x-1/2 z-10 scale-[0.80] opacity-40 hover:opacity-75 blur-[1px] cursor-pointer pointer-events-auto";
-            bgStyles = "bg-white/5 border-white/10";
+            bgStyles += " border border-white/10";
           } else {
             styles = "left-[50%] -translate-x-1/2 z-0 scale-[0.6] opacity-0 blur-sm pointer-events-none";
-            bgStyles = "bg-white/5 border-white/10";
+            bgStyles += " border border-white/10";
           }
 
           return (
             <article
               key={item.company}
               onClick={() => setActive(idx)}
-              className={`testimonial-card absolute top-4 w-[280px] md:w-[340px] rounded-2xl border p-6 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${bgStyles} ${styles}`}
+              className={`testimonial-card absolute top-4 w-[280px] md:w-[340px] rounded-2xl p-6 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ${bgStyles} ${styles}`}
             >
-              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent mix-blend-screen">
                 {item.company}
               </p>
-              <p className="text-sm leading-relaxed text-white/90">{item.quote}</p>
+              <p className="text-sm leading-relaxed text-white/90 drop-shadow-md">{item.quote}</p>
             </article>
           )
         })}
