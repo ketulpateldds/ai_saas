@@ -175,7 +175,7 @@ body::-webkit-scrollbar {
   }
 
   .vd-pin-section {
-    @apply md:h-[110vh] h-dvh overflow-hidden relative md:mt-0 mt-20;
+    @apply md:h-[110vh] h-dvh overflow-hidden relative md:mt-0 mt-20 z-10;
   }
 
   .vd-pin-section video {
@@ -183,11 +183,11 @@ body::-webkit-scrollbar {
   }
 
   .play-btn {
-    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[9vw] flex justify-center items-center bg-[#ffffff1a] backdrop-blur-xl rounded-full;
+    @apply size-[9vw] flex justify-center items-center bg-[#ffffff1a] backdrop-blur-xl rounded-full;
   }
 
   .testimonials-section {
-    @apply bg-milk relative w-full h-[120dvh];
+    @apply bg-milk relative w-full h-[120dvh] z-20;
   }
 
   .pin-box {
