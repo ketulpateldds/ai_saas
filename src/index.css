@@ -149,11 +149,29 @@ body::-webkit-scrollbar {
   }
 
   .benefit-section {
-    @apply min-h-dvh bg-black overflow-hidden relative;
+    @apply min-h-dvh bg-milk overflow-hidden relative;
   }
 
-  .benefit-section p {
-    @apply text-milk font-paragraph text-center text-lg;
+  .benefit-track {
+    @apply flex items-center h-full gap-8 pl-[10vw] pr-[10vw];
+  }
+
+  .benefit-card {
+    @apply rounded-2xl border border-[#dfd8d2] bg-[#fdfaf8] p-8 relative overflow-hidden transition-shadow duration-300 w-[24rem] md:w-[32rem] flex-none;
+  }
+
+  .benefit-card::after {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-500 pointer-events-none;
+    background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(227, 164, 88, 0.1), transparent 40%);
+  }
+
+  .benefit-card:hover {
+    @apply shadow-[0_20px_50px_rgba(82,49,34,0.05)];
+  }
+
+  .benefit-card:hover::after {
+    @apply opacity-100;
   }
 
   .vd-pin-section {
@@ -181,7 +199,7 @@ body::-webkit-scrollbar {
   }
 
   .testimonials-section h1 {
-    @apply uppercase text-[20.5vw] leading-[105%] tracking-[-.4vw] ml-[2vw] font-bold opacity-100;
+    @apply uppercase text-[15vw] leading-[105%] tracking-[-.4vw] ml-[2vw] font-bold opacity-100;
   }
 
   .first-title { @apply -translate-y-[15vh]; }

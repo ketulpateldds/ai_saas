@@ -32,55 +32,62 @@ function TestimonialsSection() {
   const sectionRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const rotations = useMemo(
-    () => ["rotate-z-[-10deg]", "rotate-z-[4deg]", "rotate-z-[-4deg]", "rotate-z-[4deg]"],
-    [],
+  useGSAP(
+    () => {
+      gsap.set(".testimonials-section", { marginTop: "-140vh" });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".testimonials-section",
+          start: " top bottom",
+          end: "100% top",
+          scrub: true,
+        },
+      });
+
+      tl.to(".testimonials-section .first-title", { xPercent: 70 })
+        .to(".testimonials-section .sec-title", { xPercent: 25 }, "<")
+        .to(".testimonials-section .third-title", { xPercent: -50 }, "<");
+
+      const pinTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".testimonials-section",
+          start: "10% top",
+          end: "200% top",
+          scrub: 1.5,
+          pin: true,
+        },
+      });
+
+      pinTl
+        .from(
+          ".vd-card",
+          {
+            x: -window.innerWidth,
+            y: window.innerHeight,
+            rotate: -60,
+            opacity: 0,
+            stagger: 0.3,
+            duration: 1.5,
+            ease: "power3.out",
+          },
+          0,
+        )
+        .to(
+          ".vd-card",
+          {
+            y: (i) => i * -70, // Slightly more vertical stagger for readability
+            x: (i) => i * 40, // More horizontal drift to spread across the viewport
+            rotate: (i) => (i % 2 === 0 ? -6 + i : 4 - i), // Subtle, more natural rotation
+            duration: 1,
+            stagger: 0.1,
+            ease: "back.out(1.2)",
+          },
+          "-=1",
+        );
+    },
+    { scope: sectionRef },
   );
-
-  useGSAP(() => {
-    gsap.set(".testimonials-section", { marginTop: "-140vh" });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".testimonials-section",
-        start: "top bottom",
-        end: "200% top",
-        scrub: true,
-      },
-    });
-
-    tl.to(".testimonials-section .first-title", { xPercent: 70 })
-      .to(".testimonials-section .sec-title", { xPercent: 25 }, "<")
-      .to(".testimonials-section .third-title", { xPercent: -50 }, "<");
-
-    const pinTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".testimonials-section",
-        start: "10% top",
-        end: "200% top",
-        scrub: 1.5,
-        pin: true,
-      },
-    });
-
-    pinTl.from(".vd-card", {
-      x: -window.innerWidth,
-      y: window.innerHeight,
-      rotate: -60,
-      opacity: 0,
-      stagger: 0.3,
-      duration: 1.5,
-      ease: "power3.out",
-    }, 0)
-    .to(".vd-card", {
-      y: (i) => i * -70, // Slightly more vertical stagger for readability
-      x: (i) => i * 40,  // More horizontal drift to spread across the viewport
-      rotate: (i) => (i % 2 === 0 ? -6 + i : 4 - i), // Subtle, more natural rotation
-      duration: 1,
-      stagger: 0.1,
-      ease: "back.out(1.2)"
-    }, "-=1");
-  }, { scope: sectionRef });
 
   return (
     <section
@@ -90,7 +97,7 @@ function TestimonialsSection() {
       <div className="absolute size-full flex flex-col items-center pt-[5vw] pointer-events-none">
         <h1 className="text-black first-title">What</h1>
         <h1 className="text-light-brown sec-title">Estate Agencies</h1>
-        <h1 className="text-black third-title">Are Seeing</h1>
+        <h1 className="text-black third-title">Are Saying</h1>
       </div>
 
       <div className="pin-box">
@@ -121,7 +128,10 @@ function TestimonialsSection() {
                       {t.stars > 0 && (
                         <div className="flex gap-0.5">
                           {Array.from({ length: t.stars }).map((_, i) => (
-                            <span key={i} className="text-[#e3a458] text-[1.1rem]">
+                            <span
+                              key={i}
+                              className="text-[#e3a458] text-[1.1rem]"
+                            >
                               ★
                             </span>
                           ))}
@@ -138,7 +148,9 @@ function TestimonialsSection() {
                   </div>
 
                   <div className="mt-auto pt-6 border-t border-[#dfd8d2]/30 flex justify-between items-center">
-                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-dark-brown/40">Verified Review</span>
+                    <span className="text-xs font-bold uppercase tracking-[0.2em] text-dark-brown/40">
+                      Verified Review
+                    </span>
                     <div className="size-8 rounded-full bg-light-brown/10 flex items-center justify-center">
                       <div className="size-2 rounded-full bg-light-brown" />
                     </div>

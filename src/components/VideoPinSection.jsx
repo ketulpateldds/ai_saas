@@ -13,8 +13,8 @@ function VideoPinSection() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: ".vd-pin-section",
-        start: "-15% top",
-        end: "200% top",
+        start: "0% top",
+        end: "100% top",
         scrub: 1.5,
         pin: true,
         anticipatePin: 1,
