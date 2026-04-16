@@ -14,6 +14,8 @@ const ClipPathTitle = ({ title, color, bg, className, borderColor }) => {
             backgroundColor: bg,
           }}
         >
+
+          
           <h2
             style={{
               color,
