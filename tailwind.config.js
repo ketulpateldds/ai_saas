@@ -4,16 +4,21 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Antonio', 'sans-serif'],
+        paragraph: ['ProximaNova', 'sans-serif'],
       },
       colors: {
-        base: '#000000',
-        card: '#0A0A0A',
-        soft: '#8E95B2',
-        line: 'rgba(255,255,255,0.1)',
-        accent: '#39FF14',
-        'accent-light': '#98FB98',
-        'accent-dark': '#228B22',
+        black: '#222123',
+        'main-bg': '#232224',
+        white: '#ffffff',
+        'dark-brown': '#523122',
+        'mid-brown': '#a26833',
+        'light-brown': '#e3a458',
+        'red-brown': '#7f3b2d',
+        'yellow-brown': '#a26833',
+        'milk-yellow': '#e3d3bc',
+        red: '#a02128',
+        milk: '#faeade',
       },
       boxShadow: {
         glow: '0 0 30px rgba(57,255,20,0.25)',

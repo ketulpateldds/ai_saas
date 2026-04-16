@@ -1,104 +1,104 @@
-import { useLayoutEffect, useRef } from 'react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import SectionHeading from '../components/SectionHeading'
-import {
-  CalendarCheck2,
-  Crosshair,
-  LineChart,
-  ClipboardCheck,
-  BrainCircuit,
-  Sparkles,
-} from 'lucide-react'
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import VideoPinSection from "../components/VideoPinSection";
 
-gsap.registerPlugin(ScrollTrigger)
-
-const benefits = [
-  { title: 'More Bookings Without More Calls', icon: CalendarCheck2 },
-  { title: 'No Missed Opportunities', icon: Crosshair },
-  { title: 'Stronger Performance Across Your Team', icon: LineChart },
-  { title: 'Less Admin, More Client Focus', icon: ClipboardCheck },
-  { title: 'Decisions Backed By Real Insight', icon: BrainCircuit },
-  { title: 'Professional Client Experience', icon: Sparkles },
-]
+const advantages = [
+  {
+    title: "More Bookings Without More Calls",
+    description:
+      "Capture more opportunities and convert inquiries, without increasing workload.",
+  },
+  {
+    title: "No Missed Opportunities",
+    description:
+      "Every call answered, every inquiry captured, every follow-up clear.",
+  },
+  {
+    title: "Stronger Performance Across Your Team",
+    description:
+      "Understand what good looks like and improve how every call is handled.",
+  },
+  {
+    title: "Less Admin, More Time To Focus On Clients",
+    description:
+      "Notes, summaries and updates handled automatically, with no manual work needed.",
+  },
+  {
+    title: "Decisions Backed By Real Insight",
+    description:
+      "See what's working, fix what's not, and move your agency forward with confidence.",
+  },
+  {
+    title: "More Professional, Consistent Client Experience",
+    description:
+      "Every call is handled clearly and consistently, building trust, improving satisfaction and strengthening your brand.",
+  },
+];
 
 function BenefitsSection() {
-  const sectionRef = useRef(null)
+  const sectionRef = useRef(null);
 
-  useLayoutEffect(() => {
-    if (!sectionRef.current) return
+  useGSAP(
+    () => {
+      const revealTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".benefit-section",
+          start: "top 70%",
+        },
+      });
 
-    const ctx = gsap.context(() => {
-      const cards = sectionRef.current.querySelectorAll('.benefit-card')
-
-      gsap.fromTo(cards,
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.55,
-          stagger: 0.12,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 78%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      )
-
-      const icons = sectionRef.current.querySelectorAll('.benefit-icon')
-      gsap.fromTo(icons,
-        { scale: 0, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.4,
-          stagger: 0.08,
-          ease: 'back.out(1.7)',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 78%',
-            toggleActions: 'play none none reverse'
-          }
-        }
-      )
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
+      revealTl
+        .from(".benefit-heading", {
+          y: 20,
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.out",
+        })
+        .from(
+          ".benefit-card",
+          {
+            y: 24,
+            opacity: 0,
+            stagger: 0.08,
+            duration: 0.45,
+            ease: "power2.out",
+          },
+          "-=0.2",
+        );
+    },
+    { scope: sectionRef },
+  );
 
   return (
-    <section
-      ref={sectionRef}
-      className="benefits-section relative z-10 mx-auto w-full max-w-7xl px-6 py-28 md:px-10"
-    >
-      <SectionHeading
-        eyebrow="The Advantage For Your Estate Agency"
-        title="Every team action becomes measurable, repeatable and coachable"
-        description="Six practical outcomes that compound week over week as your agency scales."
-      />
-      <div className="mt-14 grid gap-4 md:grid-cols-3">
-        {benefits.map((item) => (
-          <article
-            key={item.title}
-            className="benefit-card interactive-card rounded-2xl border border-white/10 bg-card/60 p-6 transition-all duration-300 hover:border-accent/30 hover:shadow-glow"
-          >
-            <div className="benefit-icon mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full border border-accent/40 bg-accent/15 text-accent">
-              <item.icon size={20} strokeWidth={2.2} />
-            </div>
-            <h3 className="benefit-title text-2xl font-semibold leading-tight text-white">
-              {item.title}
-            </h3>
-            <p className="benefit-copy mt-3 text-soft">
-              Capture opportunities, reduce friction and align the whole team
-              around clear performance signals.
-            </p>
-          </article>
-        ))}
+    <section ref={sectionRef} className="benefit-section bg-milk overflow-hidden">
+      <div className="container mx-auto px-5 md:px-10 pt-20 md:pt-24">
+        <h2 className="benefit-heading text-dark-brown text-2xl md:text-4xl font-bold tracking-tight">
+          The Advantage For your Estate Agency
+        </h2>
+
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {advantages.map((advantage) => (
+            <article
+              key={advantage.title}
+              className="benefit-card rounded-xl border border-[#dfd8d2] bg-[#f8f4f1] p-6"
+            >
+              <h3 className="text-dark-brown text-2xl md:text-3xl font-bold leading-[1.05] tracking-tight">
+                {advantage.title}
+              </h3>
+              <p className="font-paragraph text-dark-brown/80 text-lg mt-4 leading-[1.25]">
+                {advantage.description}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <div className="relative mt-8 md:mt-12">
+        <VideoPinSection />
       </div>
     </section>
-  )
+  );
 }
 
-export default BenefitsSection
+export default BenefitsSection;

@@ -1,206 +1,125 @@
-import { useEffect, useRef, useLayoutEffect } from 'react'
-import gsap from 'gsap'
-import { BarChart3, TrendingUp, Users, Zap } from 'lucide-react'
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { SplitText } from "gsap/all";
+import { useMediaQuery } from "react-responsive";
 
-function HeroSection() {
-  const sectionRef = useRef(null)
-  const imageRef = useRef(null)
+const HeroSection = () => {
+  const containerRef = useRef();
 
-  useLayoutEffect(() => {
-    if (!sectionRef.current || !imageRef.current) return
+  const isMobile = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
 
-    const ctx = gsap.context(() => {
-      gsap.from('.hero-eyebrow', {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        delay: 0.2,
-      })
+  const isTablet = useMediaQuery({
+    query: "(max-width: 1024px)",
+  });
 
-      gsap.from('.hero-title', {
-        y: 64,
-        opacity: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        delay: 0.4,
-      })
+  useGSAP(
+    () => {
+      // Staggered Title Animation
+      const titleSplit = new SplitText(".hero-title", {
+        type: "chars, words",
+      });
 
-      gsap.from('.hero-subtitle', {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        delay: 0.6,
-      })
-
-      gsap.from('.hero-cta', {
-        y: 24,
-        opacity: 0,
-        duration: 0.6,
-        ease: 'power3.out',
-        delay: 0.8,
-      })
-
-      gsap.from('.hero-image', {
-        scale: 0.92,
-        opacity: 0,
-        duration: 1.2,
-        ease: 'power2.out',
+      const tl = gsap.timeline({
         delay: 0.5,
-      })
+      });
 
-      gsap.to('.hero-image-wrap', {
-        yPercent: -3,
-        duration: 3.5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      })
-
-      gsap.to('.hero-blob-1', {
-        y: -30,
-        x: 40,
-        scale: 1.2,
-        duration: 5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-      })
-
-      gsap.to('.hero-blob-2', {
-        y: 25,
-        x: -35,
-        scale: 1.1,
-        duration: 4.5,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: 0.5,
-      })
-    }, sectionRef)
-
-    return () => ctx.revert()
-  }, [])
-
-  useEffect(() => {
-    const image = imageRef.current
-    if (!image) return
-
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e
-      const centerX = window.innerWidth / 2
-      const centerY = window.innerHeight / 2
-      
-      const moveX = (clientX - centerX) / centerX * 15
-      const moveY = (clientY - centerY) / centerY * 10
-
-      gsap.to(image, {
-        x: moveX,
-        y: moveY,
+      tl.to(".hero-content", {
+        opacity: 1,
+        y: 0,
         duration: 1,
-        ease: 'power2.out',
+        ease: "power2.out",
       })
-    }
+        .to(
+          ".hero-text-scroll",
+          {
+            duration: 1.2,
+            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+            ease: "circ.out",
+          },
+          "-=0.6",
+        )
+        .from(
+          titleSplit.chars,
+          {
+            yPercent: 120,
+            stagger: 0.02,
+            ease: "back.out(1.7)",
+            duration: 0.8,
+          },
+          "-=0.8",
+        );
 
-    window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
-  }, [])
+      // Zoom/Shrink Effect on Scroll
+      const heroTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero-container",
+          start: "1% top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
 
-  const dashboardStats = [
-    { label: 'Revenue', value: '+18.4%', icon: TrendingUp },
-    { label: 'Bookings', value: '+12.7%', icon: BarChart3 },
-    { label: 'Opportunities', value: '+24.3%', icon: Users },
-    { label: 'Coaching', value: '+9.8%', icon: Zap },
-  ]
+      heroTl.to(".hero-container", {
+        rotate: 5,
+        scale: 0.85,
+        yPercent: 20,
+        borderRadius: "4rem",
+        ease: "power1.inOut",
+      });
+    },
+    { scope: containerRef },
+  );
 
   return (
-    <section
-      ref={sectionRef}
-      className="hero-section relative z-10 mx-auto grid min-h-screen w-full max-w-7xl items-center gap-12 px-6 pb-24 pt-36 md:grid-cols-2 md:px-10"
-    >
-      <div>
-        <p className="hero-eyebrow mb-4 text-sm font-medium uppercase tracking-[0.24em] text-accent">
-          Across Every Call
-        </p>
-        <h1 className="hero-title text-4xl font-semibold leading-[1.05] text-white md:text-6xl">
-          See the full picture.
-          <br />
-          Turn insight into growth.
-        </h1>
-        <p className="hero-subtitle mt-6 max-w-xl text-base text-soft md:text-lg">
-          Track calls, inquiries, bookings and revenue in one place, with
-          AI-powered insights, analytics, leaderboards and coaching that feel
-          instant and actionable.
-        </p>
-        <button className="hero-cta interactive-button mt-10 rounded-full border border-accent/30 bg-accent px-7 py-3 text-sm font-semibold text-black transition-all duration-300 hover:bg-accent/90 md:text-base">
-          Start Free Trial
-        </button>
-      </div>
+    <section ref={containerRef} className="bg-black">
+      <div className="hero-container relative h-screen w-full overflow-hidden bg-milk">
+        {/* Background Visuals */}
+        <div className="absolute inset-0 z-0">
+          <video
+            src="/videos/hero-bg.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-cover opacity-60 mix-blend-multiply"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-milk/20 via-transparent to-milk/40" />
+        </div>
 
-      <div ref={imageRef} className="hero-image-wrap relative">
-        <div className="hero-blob-1 pointer-events-none absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full bg-accent/10 blur-[100px]" />
-        <div className="hero-blob-2 pointer-events-none absolute -bottom-10 -right-10 h-[250px] w-[250px] rounded-full bg-accent-light/10 blur-[80px]" />
-        
-        {/* Main Dashboard Card */}
-        <div className="hero-image relative rounded-3xl border border-white/10 bg-card shadow-glow overflow-hidden">
-          <div className="bg-gradient-to-br from-[#0d1117] to-[#0a0d0f] p-4 md:p-6">
-            {/* Header */}
-            <div className="mb-4 flex items-center justify-between border-b border-white/5 pb-4">
-              <div>
-                <p className="text-xs uppercase tracking-widest text-soft">AI Intelligence Hub</p>
-                <h3 className="mt-1 text-lg font-semibold text-white">Dashboard</h3>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
-                <span className="text-xs text-accent">LIVE</span>
-              </div>
-            </div>
+        {/* Animated Content */}
+        <div className="hero-content relative z-20 flex h-full w-full flex-col items-center justify-center opacity-0 translate-y-20 px-6 pt-20">
+          <div className="overflow-hidden mb-4">
+            <h1 className="hero-title text-dark-brown text-center uppercase font-bold leading-[0.9] tracking-tighter text-[12vw] lg:text-[8.5rem]">
+              See Full Picture
+            </h1>
+          </div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-3 md:gap-4">
-              {dashboardStats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="group rounded-xl border border-white/10 bg-white/5 p-3 transition-all duration-300 hover:border-accent/30 hover:bg-accent/5"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase tracking-widest text-soft group-hover:text-accent">
-                      {stat.label}
-                    </span>
-                    <stat.icon className="h-3 w-3 text-soft group-hover:text-accent" />
-                  </div>
-                  <p className="mt-2 text-2xl font-bold text-white">
-                    {stat.value}
-                  </p>
-                </div>
-              ))}
+          <div
+            className="hero-text-scroll rotate-[-2deg] mb-10 border-[0.5vw] border-milk overflow-hidden"
+            style={{ clipPath: "polygon(50% 0, 50% 0, 50% 100%, 50% 100%)" }}
+          >
+            <div className="hero-subtitle bg-mid-brown px-8 py-4">
+              <h1 className="uppercase font-bold text-milk text-[4vw] lg:text-[2.5rem] tracking-tight leading-none">
+                AI Intelligence & Growth
+              </h1>
             </div>
+          </div>
 
-            {/* Mini Chart Placeholder */}
-            <div className="mt-4 rounded-lg border border-white/10 bg-white/5 p-3">
-              <p className="mb-2 text-[10px] uppercase tracking-widest text-soft">Performance Trend</p>
-              <div className="flex items-end gap-1 h-16">
-                {[40, 65, 45, 80, 55, 90, 70, 85, 95, 75].map((h, i) => (
-                  <div
-                    key={i}
-                    className="flex-1 rounded-sm bg-accent/60 transition-all duration-300 group-hover:bg-accent"
-                    style={{ height: `${h}%` }}
-                  />
-                ))}
-              </div>
-            </div>
+          <h2 className="max-w-2xl text-center font-paragraph text-dark-brown text-lg lg:text-2xl leading-relaxed opacity-80 mb-12">
+            Track inquiries, bookings and revenue in one place. Turn every call
+            into actionable growth with AI-powered coaching and analytics.
+          </h2>
 
-            {/* Bottom Info */}
-            <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-3">
-              <span className="text-xs text-soft">Last updated: Just now</span>
-              <span className="text-xs text-accent">AI Active</span>
-            </div>
+          <div className="hero-button">
+            <p className="font-bold">Start Your Free Trial</p>
           </div>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default HeroSection
+export default HeroSection;

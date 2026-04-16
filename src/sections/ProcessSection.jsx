@@ -1,236 +1,89 @@
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SectionHeading from "../components/SectionHeading";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useGSAP } from "@gsap/react";
+import { useMediaQuery } from "react-responsive";
 
 const steps = [
   {
     number: "01",
     title: "Capture",
-    description: "Every call, inquiry and follow-up is instantly structured.",
+    description: "Every call, inquiry and follow-up is instantly structured and ready for review.",
   },
   {
     number: "02",
     title: "Analyze",
     description:
-      "AI identifies trends, risk areas and opportunities that matter now.",
+      "AI identifies trends, risk areas and opportunities that matter to your growth.",
   },
   {
     number: "03",
     title: "Coach",
     description:
-      "Leaders and teams act on clear actions with confidence and speed.",
+      "Leaders and teams act on clear insights with confidence and unmatched speed.",
   },
 ];
 
 function ProcessSection() {
   const sectionRef = useRef(null);
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
-  useLayoutEffect(() => {
-    if (!sectionRef.current) return;
+  useGSAP(() => {
+    const stepElements = gsap.utils.toArray(".process-step");
 
-    let resizeHandler;
-
-    const ctx = gsap.context(() => {
-      const linePath = document.getElementById("process-curve");
-      const bgPath = document.getElementById("process-curve-bg");
-      const container = sectionRef.current.querySelector(".process-wrapper");
-      const svgArea = container?.querySelector(".svg-container");
-
-      if (!linePath || !bgPath || !container || !svgArea) return;
-
-      const updatePath = () => {
-        const dots = container.querySelectorAll(".timeline-step .rounded-full");
-        if (dots.length === 0) return;
-
-        const svgRect = svgArea.getBoundingClientRect();
-
-        const pts = Array.from(dots).map((dot) => {
-          const rect = dot.getBoundingClientRect();
-          return {
-            x: rect.left + rect.width / 2 - svgRect.left,
-            y: Math.max(0, rect.top + rect.height / 2 - svgRect.top),
-          };
-        });
-
-        const startX = svgRect.width / 2;
-        let d = `M${startX},0`;
-
-        let prevPt = { x: startX, y: 0 };
-        pts.forEach((pt) => {
-          const cpY = prevPt.y + (pt.y - prevPt.y) / 2;
-          d += ` C${prevPt.x},${cpY} ${pt.x},${cpY} ${pt.x},${pt.y}`;
-          prevPt = pt;
-        });
-
-        const endY = svgRect.height;
-        const cpY2 = prevPt.y + (endY - prevPt.y) / 2;
-        d += ` C${prevPt.x},${cpY2} ${startX},${cpY2} ${startX},${endY}`;
-
-        bgPath.setAttribute("d", d);
-        linePath.setAttribute("d", d);
-
-        const totalLength = linePath.getTotalLength();
-        gsap.set(linePath, {
-          strokeDasharray: totalLength,
-          strokeDashoffset: totalLength,
-        });
-      };
-
-      updatePath();
-
-      resizeHandler = () => {
-        updatePath();
-        ScrollTrigger.refresh();
-      };
-      window.addEventListener("resize", resizeHandler);
-
-      gsap.to(linePath, {
-        strokeDashoffset: 0,
-        ease: "none",
+    stepElements.forEach((step, i) => {
+      gsap.from(step, {
+        opacity: 0,
+        y: 100,
+        duration: 1,
+        ease: "power2.out",
         scrollTrigger: {
-          trigger: container,
-          start: "top 65%",
-          end: "bottom 35%",
-          scrub: 1,
-          invalidateOnRefresh: true,
+          trigger: step,
+          start: "top 85%",
+          end: "top 60%",
+          scrub: true,
         },
       });
-
-      // Animate each step coming into view
-      const stepElements =
-        sectionRef.current.querySelectorAll(".timeline-step");
-      stepElements.forEach((step, i) => {
-        gsap.fromTo(
-          step,
-          { opacity: 0.6, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: step,
-              start: "top 80%",
-              end: "top 50%",
-              toggleActions: "play reverse play reverse",
-            },
-          },
-        );
-      });
-    }, sectionRef);
-
-    return () => {
-      ctx.revert();
-      if (resizeHandler) window.removeEventListener("resize", resizeHandler);
-    };
-  }, []);
-
-  // Dynamic path generation handled in layout effect now
+    });
+  }, { scope: sectionRef });
 
   return (
     <section
       ref={sectionRef}
-      className="process-section relative z-10 mx-auto w-full max-w-7xl px-6 py-28 md:px-10"
+      className="process-section bg-milk py-32 px-10"
     >
-      <SectionHeading
-        eyebrow="Set Up Around Your Agency"
-        title="Three steps to launch a high-performing AI operation"
-        description="Designed to slot into your current workflow without disrupting daily momentum."
-      />
+      <div className="container mx-auto">
+        <div className="flex flex-col lg:flex-row gap-20">
+          {/* Left Side: Sticky Title */}
+          <div className="lg:w-1/3 h-fit lg:sticky top-32">
+             <h2 className="text-dark-brown text-sm font-bold uppercase tracking-widest mb-6 opacity-60">
+                Setup Around Your Agency
+             </h2>
+             <h1 className="general-title text-dark-brown text-5xl md:text-7xl leading-tight">
+                Three steps to scale your operation.
+             </h1>
+          </div>
 
-      {/* Wrapper for scroll trigger */}
-      <div className="process-wrapper relative mt-20">
-        {/* Curved SVG Line */}
-        <svg
-          className="svg-container pointer-events-none absolute left-0 top-0 h-full w-full"
-          style={{
-            zIndex: 0,
-          }}
-        >
-          <defs>
-            <linearGradient
-              id="curveGradient"
-              x1="0%"
-              y1="0%"
-              x2="0%"
-              y2="100%"
-            >
-              <stop offset="0%" stopColor="#39FF14" />
-              <stop offset="50%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#39FF14" />
-            </linearGradient>
-          </defs>
-
-          {/* Background line */}
-          <path
-            id="process-curve-bg"
-            fill="none"
-            stroke="rgba(57,255,20,0.2)"
-            strokeWidth="4"
-          />
-
-          {/* Animated progress line */}
-          <path
-            id="process-curve"
-            fill="none"
-            stroke="url(#curveGradient)"
-            strokeWidth="4"
-            strokeLinecap="round"
-          />
-        </svg>
-
-        {/* Steps container */}
-        <div className="relative">
-          {steps.map((step, index) => (
-            <article
-              key={step.number}
-              className={`timeline-step relative flex items-center py-8 ${
-                index % 2 === 0 ? "md:flex-row" : "md:flex-row md:justify-end"
-              }`}
-            >
-              {/* Left card */}
+          {/* Right Side: Process Steps */}
+          <div className="lg:w-2/3 space-y-32">
+            {steps.map((step, index) => (
               <div
-                className={`w-full md:w-[42%] ${
-                  index % 2 === 0 ? "md:pr-16 md:text-right" : "hidden"
-                }`}
+                key={index}
+                className="process-step flex flex-col md:flex-row gap-10 md:gap-20"
               >
-                <div className="step-card inline-block rounded-2xl border border-white/10 bg-card/70 p-5 backdrop-blur transition-all duration-300 hover:border-accent/40">
-                  <p className="mb-1 text-xs font-semibold tracking-[0.2em] text-accent">
-                    Step {step.number}
-                  </p>
-                  <h3 className="text-xl font-semibold text-white">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-soft">{step.description}</p>
+                <h1 className="text-[12vw] md:text-[8rem] font-bold text-dark-brown/10 leading-none">
+                   {step.number}
+                </h1>
+                <div className="pt-4 md:pt-10 space-y-4">
+                   <h3 className="text-4xl font-bold uppercase tracking-tighter text-dark-brown">
+                      {step.title}
+                   </h3>
+                   <p className="text-xl md:text-2xl font-paragraph text-dark-brown/70 leading-relaxed max-w-lg">
+                      {step.description}
+                   </p>
                 </div>
               </div>
-
-              {/* Center dot */}
-              <div className="relative z-10 mx-auto flex h-14 w-14 shrink-0 items-center justify-center rounded-full border-[3px] border-accent bg-[#0a0a0a] text-accent font-bold md:mx-0">
-                {step.number}
-              </div>
-
-              {/* Right card */}
-              <div
-                className={`w-full md:w-[42%] ${
-                  index % 2 !== 0 ? "md:pl-16 md:text-left" : "hidden"
-                }`}
-              >
-                <div className="step-card inline-block rounded-2xl border border-white/10 bg-card/70 p-5 backdrop-blur transition-all duration-300 hover:border-accent/40">
-                  <p className="mb-1 text-xs font-semibold tracking-[0.2em] text-accent">
-                    Step {step.number}
-                  </p>
-                  <h3 className="text-xl font-semibold text-white">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-soft">{step.description}</p>
-                </div>
-              </div>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>
